@@ -1,0 +1,95 @@
+.messages {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 4rem;
+}
+
+.messages-open {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+}
+
+.messages svg {
+    transform: scale(5);
+}
+
+.your-messages-here {
+    font-size: 2rem;
+}
+
+.messages-container {
+    height: 520px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.messages-container::-webkit-scrollbar {
+    width: 5px;
+    background-color: rgb(181, 181, 181);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background-color: #000;
+    border-radius: 20px;
+}
+
+.message-input {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    height: 6%;
+}
+
+.message-input input {
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    text-indent: 1rem;
+    border-radius: 20px;
+    border: 2px solid rgb(255, 0, 153);
+}
+
+.send-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 8%;
+    border-radius: 0 20px 20px 0;
+    border: 2px solid rgb(255, 0, 153);
+    border-left: none;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.send-btn-active {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 8%;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    border: none;
+    background-color: blue;
+    color: #fff;
+    transition: all .3s ease;
+}
+
+.message {
+    background-color: blueviolet;
+    width: fit-content;
+    max-width: 500px;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 0 20px 20px 20px;
+}

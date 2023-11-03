@@ -1,0 +1,10 @@
+.main-page {
+    display: flex;
+    padding-left: 8%;
+    transition: all .3s ease;
+}
+
+.main-page-close {
+    display: flex;
+    transition: all .3s ease;
+}
