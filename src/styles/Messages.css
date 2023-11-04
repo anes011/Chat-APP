@@ -85,8 +85,17 @@
     transition: all .3s ease;
 }
 
-.message {
+.message-sender {
     background-color: blueviolet;
+    width: fit-content;
+    max-width: 500px;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 0 20px 20px 20px;
+}
+
+.message-receiver {
+    background-color: yellow;
     width: fit-content;
     max-width: 500px;
     color: #fff;

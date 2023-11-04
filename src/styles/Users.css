@@ -34,6 +34,19 @@
     color: #fff;
     cursor: pointer;
     margin-bottom: 1rem;
+    transition: all .3s ease;
+    border: none;
+}
+
+.user-container:hover {
+    background: linear-gradient(
+        rgba(194, 2, 133, 0.61) 20%,
+        rgba(128, 0, 128, 0.588) 60%
+    );
+}
+
+.user-container:focus {
+    background-color: #000;
 }
 
 .user-container svg {

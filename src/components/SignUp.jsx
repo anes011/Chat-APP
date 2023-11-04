@@ -1,10 +1,12 @@
 import '../styles/SignUp.css';
 import show from '../images & logos/show-solid-24.png';
 import hide from '../images & logos/hide-solid-24.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
 function SignUp() {
+
+    const redirect = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
     const [signUpClicked, setSignUpClicked] = useState(false);
@@ -14,32 +16,43 @@ function SignUp() {
     const passwordInput = useRef(null);
 
     useEffect(() => {
-        if (signUpClicked) {
-            const handleApi = async () => {
-                try {
-                    const response = await fetch('http://localhost:7000/users', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            name: nameInput.current.value,
-                            email: emailInput.current.value,
-                            password: passwordInput.current.value
-                        })
-                    });
-                    const data = await response.json();
-                } catch (err) {
-                    console.error(err);
-                }
+        const handleApi = async () => {
+            try {
+                const response = await fetch('http://localhost:7000/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: nameInput.current.value,
+                        email: emailInput.current.value,
+                        password: passwordInput.current.value
+                    })
+                });
+                const data = await response.json();
+            } catch (err) {
+                console.error(err);
             }
-    
+        }
+
+
+        if (signUpClicked) {
+            handleApi();
+        } else {
             handleApi();
         }
     }, [signUpClicked]);
 
     const handleSignUpClick = () => {
-        setSignUpClicked(true);
+        setSignUpClicked(!signUpClicked);
+
+        if (nameInput.current.value !== '' && emailInput.current.value !== '' && nameInput.current.value !== '') {
+            setTimeout(() => {
+                redirect('/log-in-page');
+            }, 1000);
+        }else {
+            alert('Sign Up Failed!');
+        }
     };
 
     const handleShowPassword = () => {

@@ -20,36 +20,37 @@ function LogIn() {
     const logInTitle = useRef(null);
 
     useEffect(() => {
-        if (logInClicked) {
-            const handleApi = async () => {
-                try {
-                    const response = await fetch('http://localhost:7000/users');
-                    const data = await response.json();
-                    setApiData(Object.values(data));
-                } catch (err) {
-                    console.error(err);
-                }
+        const handleApi = async () => {
+            try {
+                const response = await fetch('http://localhost:7000/users');
+                const data = await response.json();
+                setApiData(Object.values(data));
+            } catch (err) {
+                console.error(err);
             }
-
-            handleApi();
         }
 
+
+        if (logInClicked) {
+            handleApi();
+        } else {
+            handleApi();
+        }
     }, [logInClicked]);
 
     const handleLogInClicked = () => {
-        setLogInClicked(true);
-    };
+        setLogInClicked(!logInClicked);
 
-    useEffect(() => {
         apiData.map((x) => {
             if (x.email === emailInput.current.value && x.password === passwordInput.current.value) {
                 redirect('/main');
-                setLoggedUser(x._id);
+                localStorage.setItem('user', JSON.stringify(x));
+                setLoggedUser(x);
             }else {
                 logInTitle.current.textContent = 'Failed to Log!'
             }
         });
-    });
+    };
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);

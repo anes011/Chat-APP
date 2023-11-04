@@ -11,9 +11,10 @@ function App() {
   const [sideBar, setSideBar] = useState(true);
   const [userClicked, setUserClicked] = useState(false);
   const [loggedUser, setLoggedUser] = useState(null);
+  const [person, setPerson] = useState(null);
 
   return (
-    <chatData.Provider value={{ sideBar, setSideBar, userClicked, setUserClicked, loggedUser, setLoggedUser }}>
+    <chatData.Provider value={{ sideBar, setSideBar, userClicked, setUserClicked, loggedUser, setLoggedUser, person, setPerson }}>
       <div className="App">
         <Router>
           <Routes>

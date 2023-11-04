@@ -1,20 +1,83 @@
 import '../styles/Messages.css';
 import chatData from '../ContextData';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 function Messages() {
 
-    const {userClicked} = useContext(chatData);
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const {userClicked, loggedUser, person} = useContext(chatData);
 
     const [sendButton, setSendButton] = useState(false);
+    const [apiData, setApiData] = useState([]);
+    const [sendClicked, setSendClicked] = useState(false);
+    const [messageRemove, setMessageRemove] = useState(false);
+    const [messageID, setMessageID] = useState(null);
 
     const messagesIcon = useRef(null);
     const yourMessagesHere = useRef(null);
     const messageInput = useRef(null);
 
+    useEffect(() => {
+        const handleApiRender = async () => {
+            try {
+                const response = await fetch('http://localhost:7000/messages');
+                const data = await response.json();
+                setApiData(data.messages);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        handleApiRender();
+
+
+        const handleApi = async () => {
+            try {
+                const response = await fetch('http://localhost:7000/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        senderID: user._id,
+                        receiverID: person._id,
+                        content: messageInput.current.value
+                    })
+                });
+                const data = await response.json();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (sendClicked) {
+            handleApi();
+            handleApiRender();
+        } else {
+            handleApi();
+            handleApiRender();
+        }
+
+        if (messageRemove) {
+            handleApiRender();
+        }else {
+            handleApiRender();
+        }
+    }, [sendClicked, messageRemove]);
+
+    const handlePost = () => {
+        setSendClicked(!sendClicked);
+        setTimeout(() => {
+            messageInput.current.value = '';
+        }, 1000);
+    };
+
     if (userClicked) {
-        messagesIcon.current.remove();
-        yourMessagesHere.current.remove();
+        if (messagesIcon.current && yourMessagesHere.current) {
+            messagesIcon.current.remove();
+            yourMessagesHere.current.remove();
+        }
     };
 
     const handleSend = () => {
@@ -24,6 +87,34 @@ function Messages() {
             setSendButton(false);
         }
     };
+
+    useEffect(() => {
+        const handleApiRemove = async () => {
+            try {
+                if (messageID !== null) {
+                    const response = await fetch(`http://localhost:7000/messages/${messageID}`, {
+                    method: 'DELETE'
+                    });
+                    const data = await response.json();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (messageRemove) {
+            handleApiRemove();
+        } else {
+            handleApiRemove();
+        }
+    }, [messageRemove, messageID]);
+
+    const handleMessageRemove = (_id) => {
+        setMessageRemove(!messageRemove);
+
+        const target = apiData.find((x) => x._id === _id);
+        setMessageID(target._id);
+    }
 
     return(
         <div className={userClicked ? 'messages-open' : 'messages'}>
@@ -36,11 +127,23 @@ function Messages() {
             {userClicked && (
                 <div className="messages-field">
                     <div className="messages-container">
-                        <div className="message"></div>
+                        {
+                            apiData.map((m) => {
+                                if (m.senderID === user._id && m.receiverID === person._id) {
+                                    return(
+                                        <div onDoubleClick={() => handleMessageRemove(m._id)} className="message-sender">{m.content}</div>
+                                    )
+                                }else if (m.senderID === person._id && m.receiverID === user._id) {
+                                    return(
+                                        <div className="message-receiver">{m.content}</div>
+                                    )
+                                }
+                            })
+                        }
                     </div>
                     <div className="message-input">
                         <input ref={messageInput} onChange={handleSend} type="text" />
-                        <button className={sendButton ? 'send-btn-active' : 'send-btn'}>
+                        <button onClick={handlePost} className={sendButton ? 'send-btn-active' : 'send-btn'}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
                             </svg>
